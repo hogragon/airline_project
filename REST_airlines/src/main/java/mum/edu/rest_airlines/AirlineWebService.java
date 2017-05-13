@@ -8,11 +8,17 @@ package mum.edu.rest_airlines;
 import com.google.gson.Gson;
 
 import cs545.airline.dao.AirlineDao;
+import cs545.airline.dao.AirplaneDao;
+import cs545.airline.dao.AirportDao;
 import cs545.airline.dao.FlightDao;
 import cs545.airline.model.Airline;
+import cs545.airline.model.Airplane;
+import cs545.airline.model.Airport;
 import cs545.airline.model.Flight;
 import cs545.airline.nonmanaged.JpaUtil;
 import cs545.airline.service.AirlineService;
+import cs545.airline.service.AirplaneService;
+import cs545.airline.service.AirportService;
 import cs545.airline.service.FlightService;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -71,28 +77,44 @@ public class AirlineWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        FlightDao dao = new FlightDao();
-        FlightService flight = new FlightService(dao);        
+        return "AIRLINE REST SERVICE";
+    }
+    
+    @GET
+    @Path("/listFlight")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allFlight(){
+        FlightService flight = new FlightService(new FlightDao());        
         List<Flight> list = flight.findAll();
         return JsonHelper.listFlightToJson(list);
     }
     
+    
     @GET
-    @Path("/airline")
+    @Path("/listAirline")
     @Produces(MediaType.APPLICATION_JSON)
     public String allAirLine(){
         AirlineService airlineService = new AirlineService(new AirlineDao());
-//        Gson gson = new Gson();
         List<Airline> list = airlineService.findAll();
-        String rs = "";
-        for(Airline a:list){
-            rs+=a.getName() + "\n";
-//            rs+=gson.toJson(a);
-        }
-        //JpaUtil.getEntityManager().close();
-        
-        
-        return rs;
+        return JsonHelper.listAirlineToJson(list);
+    }
+    
+    @GET
+    @Path("/listAirplane")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allAirplane(){
+        AirplaneService airlineService = new AirplaneService(new AirplaneDao());
+        List<Airplane> list = airlineService.findAll();
+        return JsonHelper.listAirplaneToJson(list);
+    }
+    
+    @GET
+    @Path("/listAirport")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allAirport(){
+        AirportService airlineService = new AirportService(new AirportDao());
+        List<Airport> list = airlineService.findAll();
+        return JsonHelper.listAirportToJson(list);
     }
 
     /**
