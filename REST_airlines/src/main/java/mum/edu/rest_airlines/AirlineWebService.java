@@ -20,6 +20,7 @@ import cs545.airline.service.AirlineService;
 import cs545.airline.service.AirplaneService;
 import cs545.airline.service.AirportService;
 import cs545.airline.service.FlightService;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,6 +39,9 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonWriter;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 
 /**
  * REST Web Service
@@ -60,12 +64,12 @@ public class AirlineWebService {
        
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        JpaUtil.destroyJpaUtil();
-        super.finalize(); //To change body of generated methods, choose Tools | Templates.
-        
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        JpaUtil.destroyJpaUtil();
+//        super.finalize(); //To change body of generated methods, choose Tools | Templates.
+//        
+//    }
     
     
 
@@ -121,17 +125,38 @@ public class AirlineWebService {
      * PUT method for updating or creating an instance of AirlineWebService
      * @param content representation for the resource
      */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
+
+    
+    @POST
+    @Path("/createAirline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
+    public String createAirline(@FormParam("id") int id,
+      @FormParam("name") String name,
+      @Context HttpServletResponse servletResponse) throws IOException {
+        System.out.println("input content");
+//        AirlineService airlineService = new AirlineService(new AirlineDao());
+//        airlineService.create(airport);
+        return "Finish POST";
     }
     
-    @GET
-    @Path("/find/{number}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String find(@PathParam("number") String flightNumber){
-        //appInstance.getFlightService().findByNumber(flightNumber);
-                
-        return "{hello:text}";
+    @POST
+    @Path("/createAirport")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
+    public String createAirport(
+        @FormParam("id") String id,
+        @FormParam("name") String name,
+        @FormParam("code") String code,
+        @FormParam("city") String city,
+        @FormParam("country") String country,
+        @Context HttpServletResponse servletResponse) throws IOException {
+        
+        AirportService airportService = new AirportService(new AirportDao());
+        Airport airPort = new Airport(code, name, city, country);
+        airPort.setId(Long.parseLong(id));
+        airportService.create(airPort);
+        
+        return JsonHelper.airPortToJsonString(airPort);
     }
 }

@@ -1,5 +1,7 @@
 package cs545.airline.model;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class Airport {
 
 	/* Constructors */
 	public Airport() {
+            arrivals = new ArrayList<>();
+            departures = new ArrayList<>();
 	}
 
 	public Airport(String airportcode, String name, String city, String country) {

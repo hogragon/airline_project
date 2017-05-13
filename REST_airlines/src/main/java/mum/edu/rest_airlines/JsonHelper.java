@@ -30,9 +30,6 @@ public class JsonHelper {
         model.add("arrivalTime", f.getArrivalTime());
         model.add("departureDate", f.getDepartureDate());
         model.add("departureTime", f.getDepartureTime());
-//        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
-//        model.add("destination",airPortToObjectBuilder(f.getDestination()));
-//        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
         return model;
     }
     
@@ -51,12 +48,6 @@ public class JsonHelper {
         model.add("name", f.getName());
         return model;
     }
-    
-//    private static JsonObject airlineInfoToJson(Airline f){
-//        JsonObjectBuilder model = airlineToJson(f);
-//        model.add("flights", listFlightToJsonArray(f.getFlights()));        
-//        return model.build();
-//    }
     
     private static JsonObjectBuilder airPlaneToObjectBuilder(Airplane f){
         JsonObjectBuilder model = Json.createObjectBuilder();
@@ -93,6 +84,13 @@ public class JsonHelper {
     
     private static JsonObject airPortToJson(Airport f){
         return airPortInfoToObjectBuilder(f).build();
+    }
+    
+    public static String airPortToJsonString(Airport f){
+        StringWriter strWriter = new StringWriter();
+        JsonWriter jsonWrite = Json.createWriter(strWriter);
+        jsonWrite.writeObject(airPortToObjectBuilder(f).build());
+        return strWriter.toString();       
     }
     
     public static String listAirportToJson(List<Airport> list){
