@@ -36,9 +36,9 @@ public class JsonHelper {
     private static JsonObject flightInfoToJson(Flight f){
         JsonObjectBuilder model = flightToJson(f);
         
-        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
-        model.add("destination",airPortToObjectBuilder(f.getDestination()));
-        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
+//        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
+//        model.add("destination",airPortToObjectBuilder(f.getDestination()));
+//        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
         return model.build();
     }
     
@@ -47,6 +47,13 @@ public class JsonHelper {
         model.add("id", f.getId());
         model.add("name", f.getName());
         return model;
+    }
+    
+    public static String airlineToJsonString(Airline f){
+        StringWriter strWriter = new StringWriter();
+        JsonWriter jsonWrite = Json.createWriter(strWriter);
+        jsonWrite.writeObject(airlineToJson(f).build());
+        return strWriter.toString();
     }
     
     private static JsonObjectBuilder airPlaneToObjectBuilder(Airplane f){
@@ -66,19 +73,18 @@ public class JsonHelper {
         JsonObjectBuilder model = Json.createObjectBuilder();
         model.add("id", f.getId());
         model.add("name", f.getName());
-        model.add("serialNumber", f.getAirportcode());
-        model.add("capacity", f.getCity());
-        model.add("model", f.getCountry());
-        //model.add("arrivals", listFlightToJsonArray(f.getArrivals()));
-        //model.add("departures", listFlightToJsonArray(f.getDepartures()));
+        model.add("airportCode", f.getAirportcode());
+        model.add("city", f.getCity());
+        model.add("country", f.getCountry());
+        
         return model;
     }
     
     private static JsonObjectBuilder airPortInfoToObjectBuilder(Airport f){
         JsonObjectBuilder model = airPortToObjectBuilder(f);
         
-        model.add("arrivals", listFlightInfoToJsonArrayBuilder(f.getArrivals()));
-        model.add("departures", listFlightInfoToJsonArrayBuilder(f.getDepartures()));
+//        model.add("arrivals", listFlightInfoToJsonArrayBuilder(f.getArrivals()));
+//        model.add("departures", listFlightInfoToJsonArrayBuilder(f.getDepartures()));
         return model;
     }
     

@@ -61,7 +61,7 @@ public class AirlineWebService {
      * Creates a new instance of AirlineWebService
      */
     public AirlineWebService() {
-       
+       MemoryDBA.getInstance();
     }
 
 //    @Override
@@ -88,9 +88,11 @@ public class AirlineWebService {
     @Path("/listFlight")
     @Produces(MediaType.APPLICATION_JSON)
     public String allFlight(){
-        FlightService flight = new FlightService(new FlightDao());        
-        List<Flight> list = flight.findAll();
-        return JsonHelper.listFlightToJson(list);
+//        FlightService flight = new FlightService(new FlightDao());        
+//        List<Flight> list = flight.findAll();
+//        return JsonHelper.listFlightToJson(list);
+
+        return JsonHelper.listFlightToJson(MemoryDBA.getInstance().getFlightList());
     }
     
     
@@ -98,27 +100,30 @@ public class AirlineWebService {
     @Path("/listAirline")
     @Produces(MediaType.APPLICATION_JSON)
     public String allAirLine(){
-        AirlineService airlineService = new AirlineService(new AirlineDao());
-        List<Airline> list = airlineService.findAll();
-        return JsonHelper.listAirlineToJson(list);
+//        AirlineService airlineService = new AirlineService(new AirlineDao());
+//        List<Airline> list = airlineService.findAll();
+//        return JsonHelper.listAirlineToJson(list);
+
+        return JsonHelper.listAirlineToJson(MemoryDBA.getInstance().getAirlineList());
     }
     
     @GET
     @Path("/listAirplane")
     @Produces(MediaType.APPLICATION_JSON)
     public String allAirplane(){
-        AirplaneService airlineService = new AirplaneService(new AirplaneDao());
-        List<Airplane> list = airlineService.findAll();
-        return JsonHelper.listAirplaneToJson(list);
+//        AirplaneService airlineService = new AirplaneService(new AirplaneDao());
+//        List<Airplane> list = airlineService.findAll();
+//        return JsonHelper.listAirplaneToJson(list);
+        return JsonHelper.listAirplaneToJson(MemoryDBA.getInstance().getAirplaneList());
     }
     
     @GET
     @Path("/listAirport")
     @Produces(MediaType.APPLICATION_JSON)
     public String allAirport(){
-        AirportService airlineService = new AirportService(new AirportDao());
-        List<Airport> list = airlineService.findAll();
-        return JsonHelper.listAirportToJson(list);
+        //AirportService airlineService = new AirportService(new AirportDao());
+        //List<Airport> list = airlineService.findAll();
+        return JsonHelper.listAirportToJson(MemoryDBA.getInstance().getAirportList());
     }
 
     /**
@@ -131,32 +136,44 @@ public class AirlineWebService {
     @Path("/createAirline")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
-    public String createAirline(@FormParam("id") int id,
+    public String createAirline(
       @FormParam("name") String name,
       @Context HttpServletResponse servletResponse) throws IOException {
-        System.out.println("input content");
-//        AirlineService airlineService = new AirlineService(new AirlineDao());
-//        airlineService.create(airport);
-        return "Finish POST";
+        
+        Airline a = new Airline(name);
+        a.setId(MemoryDBA.getInstance().getAirlineList().size());
+        MemoryDBA.getInstance().getAirlineList().add(a);
+        
+        return JsonHelper.airlineToJsonString(a);
     }
     
     @POST
     @Path("/createAirport")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
-    public String createAirport(
-        @FormParam("id") String id,
+    public String createAirport(        
         @FormParam("name") String name,
         @FormParam("code") String code,
         @FormParam("city") String city,
         @FormParam("country") String country,
         @Context HttpServletResponse servletResponse) throws IOException {
         
-        AirportService airportService = new AirportService(new AirportDao());
-        Airport airPort = new Airport(code, name, city, country);
-        airPort.setId(Long.parseLong(id));
-        airportService.create(airPort);
         
-        return JsonHelper.airPortToJsonString(airPort);
+        Airport airPort = new Airport(code, name, city, country);
+        
+        
+        if(MemoryDBA.getInstance()!=null){
+            if(MemoryDBA.getInstance().getAirportList()!=null){
+                airPort.setId(MemoryDBA.getInstance().getAirportList().size());
+                MemoryDBA.getInstance().getAirportList().add(airPort);
+                return JsonHelper.airPortToJsonString(airPort);
+            }
+            else{
+                return "Airport List is null";
+            }
+        }
+        
+        return "Databse error";
+        
     }
 }
