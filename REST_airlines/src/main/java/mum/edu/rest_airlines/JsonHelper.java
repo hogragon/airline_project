@@ -36,9 +36,9 @@ public class JsonHelper {
     private static JsonObject flightInfoToJson(Flight f){
         JsonObjectBuilder model = flightToJson(f);
         
-//        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
-//        model.add("destination",airPortToObjectBuilder(f.getDestination()));
-//        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
+        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
+        model.add("destination",airPortToObjectBuilder(f.getDestination()));
+        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
         return model.build();
     }
     
