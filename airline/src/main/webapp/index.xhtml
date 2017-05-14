@@ -25,7 +25,7 @@ and open the template in the editor.
         <!--<f:ajax event="load" onevent="onCustomLoad" render="tableFlight"/>-->
         <h:dataTable value="#{flightManagerBean.flights}" var="f" id="tableFlight">
             <h:column>
-                <h:outputText value="#{f.flightnr} "/>
+                <h:outputText value="#{f.flightNumber} "/>
             </h:column>
             <h:column>
                 <h:outputText value="#{f.departureDate} "/>    

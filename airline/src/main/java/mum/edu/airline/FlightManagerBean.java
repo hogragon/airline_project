@@ -5,17 +5,23 @@
  */
 package mum.edu.airline;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.spi.Context;
 import javax.faces.context.FacesContext;
+import javax.json.Json;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,7 +46,7 @@ public class FlightManagerBean implements Serializable {
      * Creates a new instance of FlightManagerBean
      */
     public FlightManagerBean() {
-       
+       flights = new ArrayList<>();
     }
     
     public void onLoad() throws IOException{
@@ -60,20 +66,58 @@ public class FlightManagerBean implements Serializable {
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);
         System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
         
-        //FacesContext.getCurrentInstance().getExternalContext().dispatch("http://localhost:8080/REST_airlines/webresources/airline/listFlight");
+//        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//        Gson gson = new Gson();
+//        FlightBean[] allFlights = gson.fromJson(in, FlightBean[].class);
+//        System.out.println(gson.toString());
+//        for(FlightBean f:allFlights){
+//            System.out.println(f.getFlightNumber());
+//        }
+        
+        flights.clear();
+        FlightBean f = null;
+        JsonParser parser = Json.createParser(con.getInputStream());
+//        System.out.println(parser.getString());
+        while (parser.hasNext()) {
+            JsonParser.Event event = parser.next();
+            switch(event) {
+               case START_OBJECT:                   
+                   f = new FlightBean();
+                   break;
+               case END_OBJECT:
+                   flights.add(f);
+                   break;
+               case KEY_NAME:
+               {
+                  String key = parser.getString();
+                  if(key.equals("id")){
+                      parser.next();
+                      f.setId(parser.getLong());
+                  }
+                  else if(key.equals("flightNumber")){
+                      parser.next();
+                      f.setFlightNumber(parser.getString());
+                  }
+                  else if(key.equals("arrivalDate")){
+                      parser.next();
+                      f.setArrivalDate(parser.getString());
+                  }
+                  else if(key.equals("arrivalTime")){
+                      parser.next();
+                      f.setArrivalTime(parser.getString());
+                  }
+                  else if(key.equals("departureDate")){
+                      parser.next();
+                      f.setDepartureDate(parser.getString());
+                  }
+                  else if(key.equals("departureTime")){
+                      parser.next();
+                      f.setDepartureTime(parser.getString());
+                  }
+                  break;
+               }
+            }
+        }
     }
 }
