@@ -20,10 +20,16 @@ import cs545.airline.service.AirlineService;
 import cs545.airline.service.AirplaneService;
 import cs545.airline.service.AirportService;
 import cs545.airline.service.FlightService;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -35,13 +41,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonString;
+import javax.json.JsonValue;
 import javax.json.JsonWriter;
+import javax.json.stream.JsonParser;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
@@ -132,20 +144,20 @@ public class AirlineWebService {
      */
 
     
-    @POST
-    @Path("/createAirline")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
-    public String createAirline(
-      @FormParam("name") String name,
-      @Context HttpServletResponse servletResponse) throws IOException {
-        
-        Airline a = new Airline(name);
-        a.setId(MemoryDBA.getInstance().getAirlineList().size());
-        MemoryDBA.getInstance().getAirlineList().add(a);
-        
-        return JsonHelper.airlineToJsonString(a);
-    }
+//    @POST
+//    @Path("/createAirline")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)  
+//    public String createAirline(
+//      @FormParam("name") String name,
+//      @Context HttpServletResponse servletResponse) throws IOException {
+//        
+//        Airline a = new Airline(name);
+//        a.setId(MemoryDBA.getInstance().getAirlineList().size());
+//        MemoryDBA.getInstance().getAirlineList().add(a);
+//        
+//        return JsonHelper.airlineToJsonString(a);
+//    }
     
     @POST
     @Path("/createAirport")
@@ -175,5 +187,64 @@ public class AirlineWebService {
         
         return "Databse error";
         
+    }
+    
+    @POST
+    @Path("/createAirline")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_JSON)  
+    public String createAirline(InputStream inputStreamData) throws IOException {
+        
+        JsonParser parser = Json.createParser(inputStreamData);
+//        String flightInfo = "";
+        Airline airline = new Airline();
+        while (parser.hasNext()) {
+            JsonParser.Event event = parser.next();
+            switch(event) {               
+               case KEY_NAME:
+               {
+                  String key = parser.getString();
+                  if(key.equals("name")){
+                      parser.next();
+                      airline.setId(MemoryDBA.getInstance().getAirlineList().size()+1);
+                      airline.setName(parser.getString());
+                  }
+                  else if(key.equals("flightnr")){
+                      parser.next();
+                      String flightNumber = parser.getString();
+                      List<Flight> l = MemoryDBA.getInstance().getFlightList();
+                      for(Flight f:l){
+                          if(f.getFlightnr().equals(flightNumber)){
+                              airline.addFlight(f);
+                              f.setAirline(airline);
+                              System.out.println(f.getAirline().getName());
+                              break;
+                          }
+                      }
+//                      flightInfo = parser.getString();
+                  }
+                  break;
+               }
+            }
+        }
+        
+        
+        
+        MemoryDBA.getInstance().getAirlineList().add(airline);
+        
+//        StringBuilder crunchifyBuilder = new StringBuilder();
+//        try {
+//            BufferedReader in = new BufferedReader(new InputStreamReader(inputStreamData));
+//            String line = null;
+//            while ((line = in.readLine()) != null) {
+//                crunchifyBuilder.append(line);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error Parsing: - ");
+//        }
+//        System.out.println("Data Received: " + crunchifyBuilder.toString());
+
+        // return HTTP response 200 in case of success
+        return "Update Success";
     }
 }

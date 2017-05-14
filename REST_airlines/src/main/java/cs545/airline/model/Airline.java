@@ -1,5 +1,6 @@
 package cs545.airline.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Airline {
 	private String name;
 	@OneToMany(mappedBy = "airline")
 	@OrderBy("departureDate, departureTime")
-	private List<Flight> flights;
+	private List<Flight> flights = new ArrayList<>();
 
 	/* Constructors */
 	public Airline() {
@@ -48,7 +49,8 @@ public class Airline {
 	}
 
 	public List<Flight> getFlights() {
-		return Collections.unmodifiableList(flights);
+            return flights;
+            //return Collections.unmodifiableList(flights);
 	}
 	
 	/* Collections Methods */

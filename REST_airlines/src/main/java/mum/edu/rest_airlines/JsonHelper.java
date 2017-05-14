@@ -30,15 +30,21 @@ public class JsonHelper {
         model.add("arrivalTime", f.getArrivalTime());
         model.add("departureDate", f.getDepartureDate());
         model.add("departureTime", f.getDepartureTime());
+        
         return model;
     }
     
     private static JsonObject flightInfoToJson(Flight f){
         JsonObjectBuilder model = flightToJson(f);
         
-        model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
-        model.add("destination",airPortToObjectBuilder(f.getDestination()));
-        model.add("origin",airPortToObjectBuilder(f.getOrigin()));
+        if(f.getAirline()!=null)
+            model.add("airline", airlineToJson(f.getAirline()));
+        if(f.getAirplane()!=null)
+            model.add("airplane",airPlaneToObjectBuilder(f.getAirplane()));
+        if(f.getDestination()!=null)
+            model.add("destination",airPortToObjectBuilder(f.getDestination()));
+        if(f.getOrigin()!=null)
+            model.add("origin",airPortToObjectBuilder(f.getOrigin()));
         return model.build();
     }
     

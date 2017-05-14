@@ -5,6 +5,7 @@
  */
 package mum.edu.airline;
 
+import com.google.gson.Gson;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,16 @@ public class ArilineManagerBean implements Serializable{
     
     public void addAirline(ActionEvent e){
         
+        for(FlightBean f:selectedAirline.getFlights()){
+            System.out.println("flight number: "+f.getFlightNumber());
+        }
 //        System.out.println("selected airline="+selectedAirline.getName());
-        airlines.add(selectedAirline);
+//        airlines.add(selectedAirline);
+        
+//        Gson gson = new Gson();
+//        gson.toJson(selectedAirline);
+        
+       
         
 //        Map<String,String> m = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 //        

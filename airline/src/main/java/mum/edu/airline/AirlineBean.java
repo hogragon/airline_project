@@ -5,6 +5,7 @@
  */
 package mum.edu.airline;
 
+import com.google.gson.Gson;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,13 +54,29 @@ public class AirlineBean implements Serializable{
         flights = new ArrayList<>();
     }
     
-    public void selectFlight(FlightBean f){
-        for(FlightBean fo:flights){
-            if(fo.getFlightNumber().equals(f.getFlightNumber())){
-                flights.remove(fo);
-                return;
-            }
-        }
+    public String selectFlight(FlightBean f){
+//        for(FlightBean fo:flights){
+//            if(fo.getFlightNumber().equals(f.getFlightNumber())){
+//                flights.remove(fo);
+//                return;
+//            }
+//        }
+        System.out.println("selected Flight: "+f.getFlightNumber());
         flights.add(f);
+        return null;
+    }
+    
+    public String createAirline(){
+        Gson gson = new Gson();
+        try{
+            String response = HttpConnectionHelper.sendPostRequest("createAirline", gson.toJson(this));
+            System.out.print(response);
+            return "index";
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            
+        }
+        return "index";
     }
 }

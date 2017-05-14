@@ -5,26 +5,16 @@
  */
 package mum.edu.airline;
 
-import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.Context;
-import javax.faces.context.FacesContext;
 import javax.json.Json;
-import javax.json.JsonReader;
 import javax.json.stream.JsonParser;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -79,7 +69,6 @@ public class FlightManagerBean implements Serializable {
         flights.clear();
         FlightBean f = null;
         JsonParser parser = Json.createParser(con.getInputStream());
-//        System.out.println(parser.getString());
         while (parser.hasNext()) {
             JsonParser.Event event = parser.next();
             switch(event) {

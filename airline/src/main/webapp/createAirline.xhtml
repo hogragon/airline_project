@@ -17,7 +17,7 @@ and open the template in the editor.
         <h:outputText value="Airline Name:"/><h:inputText value="#{airlineBean.name}"/><br/>
         <h:dataTable value="#{flightManagerBean.flights}" var="f" id="tableFlight">            
             <h:column>
-                <h:selectBooleanCheckbox onclick="#{airlineBean.selectFlight(f)}"/>
+                <h:commandLink value="Select" action="#{airlineBean.selectFlight(f)}"/>                
             </h:column>
             <h:column>
                 <f:facet name="header">Flight Number</f:facet>
@@ -42,9 +42,7 @@ and open the template in the editor.
         </h:dataTable>
         
         <h:commandButton value="Cancel" action="index"/>
-        <h:commandButton value="Save" action="index" actionListener="#{arilineManagerBean.addAirline}">
-            <f:param name="selectedAirline" value="#{airlineBean}"/>
-        </h:commandButton>
+        <h:commandButton value="Save" action="#{airlineBean.createAirline}"/>
     </h:form>
         
     </h:body>
