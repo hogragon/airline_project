@@ -5,17 +5,20 @@
  */
 package mum.edu.airline;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 
 /**
  *
  * @author Son Vu
  */
 @Named(value = "airlineBean")
-@ApplicationScoped
-public class AirlineBean {
+@SessionScoped
+public class AirlineBean implements Serializable{
     private long id;
     private String name;    
     private List<FlightBean> flights;
@@ -47,6 +50,16 @@ public class AirlineBean {
      * Creates a new instance of AirlineBean
      */
     public AirlineBean() {
+        flights = new ArrayList<>();
     }
     
+    public void selectFlight(FlightBean f){
+        for(FlightBean fo:flights){
+            if(fo.getFlightNumber().equals(f.getFlightNumber())){
+                flights.remove(fo);
+                return;
+            }
+        }
+        flights.add(f);
+    }
 }

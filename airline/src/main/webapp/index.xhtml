@@ -19,24 +19,33 @@ and open the template in the editor.
     <h:form>
         <h:commandButton value="Get Flights">
             <f:ajax event="click" onevent="${flightManagerBean.onLoad()}" render="tableFlight"/>
-        </h:commandButton>   
+        </h:commandButton>
+        <h:commandButton value="Create Airline" action="createAirline"/>
+        <h:commandButton value="View Airline" action="viewAirline"/>
+        
         <h:outputScript library="javax.faces" name="jsf.js" target="head"/>
         <script type="text/javascript" src="js/airline_app.js"/>
         <!--<f:ajax event="load" onevent="onCustomLoad" render="tableFlight"/>-->
         <h:dataTable value="#{flightManagerBean.flights}" var="f" id="tableFlight">
+            
             <h:column>
+                <f:facet name="header">Flight Number</f:facet>
                 <h:outputText value="#{f.flightNumber} "/>
             </h:column>
             <h:column>
+                <f:facet name="header">Departure Date</f:facet>
                 <h:outputText value="#{f.departureDate} "/>    
             </h:column>
             <h:column>
+                <f:facet name="header">Departure Time</f:facet>
                 <h:outputText value="#{f.departureTime} "/>    
             </h:column>
             <h:column>
+                <f:facet name="header">Arrival Date</f:facet>
                 <h:outputText value="#{f.arrivalDate} "/>    
             </h:column>
             <h:column>
+                <f:facet name="header">Arrival Time</f:facet>
                 <h:outputText value="#{f.arrivalTime} "/>    
             </h:column>
 <!--            <h:column>

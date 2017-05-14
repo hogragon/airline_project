@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.Context;
 import javax.faces.context.FacesContext;
 import javax.json.Json;
@@ -30,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Son Vu
  */
 @Named(value = "flightManagerBean")
-@SessionScoped
+@ApplicationScoped
 public class FlightManagerBean implements Serializable {
 
     private List<FlightBean> flights;

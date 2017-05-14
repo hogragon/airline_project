@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Create Ailine</title>
+    </h:head>
+    <h:body>
+    <h:form>
+        <h:outputText value="Airline Name:"/><h:inputText value="#{airlineBean.name}"/><br/>
+        <h:dataTable value="#{flightManagerBean.flights}" var="f" id="tableFlight">            
+            <h:column>
+                <h:selectBooleanCheckbox onclick="#{airlineBean.selectFlight(f)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Flight Number</f:facet>
+                <h:outputText value="#{f.flightNumber} "/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Departure Date</f:facet>
+                <h:outputText value="#{f.departureDate} "/>    
+            </h:column>
+            <h:column>
+                <f:facet name="header">Departure Time</f:facet>
+                <h:outputText value="#{f.departureTime} "/>    
+            </h:column>
+            <h:column>
+                <f:facet name="header">Arrival Date</f:facet>
+                <h:outputText value="#{f.arrivalDate} "/>    
+            </h:column>
+            <h:column>
+                <f:facet name="header">Arrival Time</f:facet>
+                <h:outputText value="#{f.arrivalTime} "/>    
+            </h:column>
+        </h:dataTable>
+        
+        <h:commandButton value="Cancel" action="index"/>
+        <h:commandButton value="Save" action="index" actionListener="#{arilineManagerBean.addAirline}">
+            <f:param name="selectedAirline" value="#{airlineBean}"/>
+        </h:commandButton>
+    </h:form>
+        
+    </h:body>
+</html>
